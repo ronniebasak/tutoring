@@ -17,31 +17,33 @@
             var gameOver = false;
             var board = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
 
+            const CELL_SIZE = 200
+
             function drawBoard() {
                 ctx.beginPath();
-                ctx.moveTo(0, 200);
-                ctx.lineTo(600, 200);
-                ctx.moveTo(0, 400);
-                ctx.lineTo(600, 400);
-                ctx.moveTo(200, 0);
-                ctx.lineTo(200, 600);
-                ctx.moveTo(400, 0);
-                ctx.lineTo(400, 600);
+                ctx.moveTo(0, CELL_SIZE);
+                ctx.lineTo(3 * CELL_SIZE, CELL_SIZE);
+                ctx.moveTo(0, 2 * CELL_SIZE);
+                ctx.lineTo(3 * CELL_SIZE, 2 * CELL_SIZE);
+                ctx.moveTo(CELL_SIZE, 0);
+                ctx.lineTo(CELL_SIZE, 3 * CELL_SIZE);
+                ctx.moveTo(2 * CELL_SIZE, 0);
+                ctx.lineTo(2 * CELL_SIZE, 3 * CELL_SIZE);
                 ctx.stroke();
             }
 
             function drawX(x, y) {
                 ctx.beginPath();
-                ctx.moveTo(x * 200, y * 200);
-                ctx.lineTo(x * 200 + 200, y * 200 + 200);
-                ctx.moveTo(x * 200 + 200, y * 200);
-                ctx.lineTo(x * 200, y * 200 + 200);
+                ctx.moveTo(x * CELL_SIZE, y * CELL_SIZE);
+                ctx.lineTo(x * CELL_SIZE + CELL_SIZE, y * CELL_SIZE + CELL_SIZE);
+                ctx.moveTo(x * CELL_SIZE + CELL_SIZE, y * CELL_SIZE);
+                ctx.lineTo(x * CELL_SIZE, y * CELL_SIZE + CELL_SIZE);
                 ctx.stroke();
             }
 
             function drawO(x, y) {
                 ctx.beginPath();
-                ctx.arc(x * 200 + 100, y * 200 + 100, 100, 0, 2 * Math.PI);
+                ctx.arc(x * CELL_SIZE + (CELL_SIZE / 2), y * CELL_SIZE + (CELL_SIZE / 2), (CELL_SIZE / 2), 0, 2 * Math.PI);
                 ctx.stroke();
             }
 
@@ -64,9 +66,6 @@
             }
 
             function game() {
-                var canvas = document.getElementById('canvas');
-                ctx = canvas.getContext('2d');
-
                 ctx.strokeStyle = 'black';
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 drawBoard();
@@ -83,6 +82,42 @@
 
                 requestAnimationFrame(game);
             }
+
+
+            function handleClick(ev) {
+                var x = Math.floor(ev.offsetX / 200);
+                var y = Math.floor(ev.offsetY / 200);
+
+                if (board[y][x] === 0) {
+                    if (player == 1) {
+                        board[y][x] = 1;
+                        player = 2;
+                    } else {
+                        board[y][x] = 2;
+                        player = 1;
+                    }
+                }
+
+
+                var winner = checkWin();
+                if (winner != 0) {
+
+                    setTimeout(() => {
+                        alert("Player " + winner + " wins!");
+                        resetBoard()
+                    }, 200)
+
+                } else if (isBoardFull() && winner == 0) {
+                    setTimeout(() => {
+                        alert("Draw");
+                        resetBoard()
+                    }, 200)
+
+                }
+            }
+
+
+
             function isBoardFull() {
                 for (let i = 0; i < 3; i++) {
                     for (let j = 0; j < 3; j++) {
@@ -95,6 +130,8 @@
                 return true
             }
 
+
+
             function resetBoard() {
                 board = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
                 player = 1
@@ -102,39 +139,10 @@
             }
 
             window.onload = () => {
+                var canvas = document.getElementById('canvas');
+                ctx = canvas.getContext('2d');
                 requestAnimationFrame(game);
-
-                canvas.addEventListener("click", (ev) => {
-                    var x = Math.floor(ev.offsetX / 200);
-                    var y = Math.floor(ev.offsetY / 200);
-
-                    if (board[y][x] === 0) {
-                        if (player == 1) {
-                            board[y][x] = 1;
-                            player = 2;
-                        } else {
-                            board[y][x] = 2;
-                            player = 1;
-                        }
-                    }
-
-
-                    var winner = checkWin();
-                    if (winner != 0) {
-
-                        setTimeout(() => {
-                            alert("Player " + winner + " wins!");
-                            resetBoard()
-                        }, 200)
-
-                    } else if (isBoardFull() && winner == 0) {
-                        setTimeout(() => {
-                            alert("Draw");
-                            resetBoard()
-                        }, 200)
-
-                    }
-                })
+                canvas.addEventListener("click", handleClick);
             }
 
         </script>

@@ -14,7 +14,7 @@ pub fn main() anyerror!void {
         .window_resizable = true,
         .msaa_4x_hint = false,
     });
-    rl.initWindow(screenWidth, screenHeight, "raylib-zig [core] example - basic window");
+    rl.initWindow(screenWidth, screenHeight, "FlapZig");
     defer rl.closeWindow(); // Close window and OpenGL context
     rl.setTargetFPS(120); // Set our game to run at 60 frames-per-second
 
@@ -31,7 +31,13 @@ pub fn main() anyerror!void {
                 scene_types.SceneTag.GameScene => {
                     current_scene = scenes.Scene{ .GameScene = .{} };
                 },
-                else => {},
+                scene_types.SceneTag.IntroScene => {
+                    current_scene = scenes.Scene{ .IntroScene = .{} };
+                },
+                scene_types.SceneTag.EndScene => {
+                    current_scene = scenes.Scene{ .EndScene = .{} };
+                },
+                // else => {},
             }
         }
 

@@ -12,7 +12,7 @@ pub const Pipe = struct {
     gap: i32 = 200, // vertical location gap in the pipe
     gap_size: i32 = 150, // height of gap from top
     width: i32 = 30, // width of pipe
-    xpos: i32 = -100, // x position of pipe
+    xpos: i32 = 2000, // x position of pipe
     color: rl.Color = .pink,
     active: bool = false,
     scored: bool = false,
@@ -29,6 +29,12 @@ pub const Pipe = struct {
         self.scored = false;
     }
 
+    pub fn despawn(self: *Pipe) void {
+        self.xpos = 1000;
+        self.active = false;
+        self.scored = false;
+    }
+
     pub fn update(self: *Pipe, dt: f32) void {
         // _ = self;
         // _ = dt;
@@ -36,15 +42,22 @@ pub const Pipe = struct {
             self.xpos -= @intFromFloat(PIPE_SPEED * dt);
 
             if (self.xpos < -self.width) {
-                self.active = false;
+                self.despawn();
             }
         }
     }
 
     pub fn draw(self: *Pipe) void {
         // rl.drawCircle(@intFromFloat(self.pos.x), @intFromFloat(self.pos.y), self.radius, self.color);
-        rl.drawRectangle(self.xpos, 0, self.width, self.gap, rl.Color.dark_brown);
-        rl.drawRectangle(self.xpos, self.gap + self.gap_size, self.width, 700, self.color);
+        //
+
+        if (!self.scored) {
+            rl.drawRectangle(self.xpos, 0, self.width, self.gap, rl.Color.dark_brown);
+            rl.drawRectangle(self.xpos, self.gap + self.gap_size, self.width, 700, self.color);
+        } else {
+            rl.drawRectangle(self.xpos, 0, self.width, self.gap, rl.Color.red);
+            rl.drawRectangle(self.xpos, self.gap + self.gap_size, self.width, 700, rl.Color.red);
+        }
     }
 };
 

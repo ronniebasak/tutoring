@@ -7,9 +7,8 @@ pub const IntroScene = struct {
         _ = dt;
 
         const key = rl.getKeyPressed();
-        switch (key) {
-            rl.KeyboardKey.space => return scene_types.SceneTag.GameScene,
-            else => {},
+        if (key == rl.KeyboardKey.space) {
+            return scene_types.SceneTag.GameScene;
         }
         return null;
     }

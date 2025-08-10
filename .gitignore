@@ -1,0 +1,45 @@
+# Zig build output
+zig-out/
+.zig-cache/
+
+# Common build artifacts (if you have custom scripts)
+*.o
+*.obj
+*.exe
+*.out
+*.a
+*.so
+*.dll
+*.dylib
+
+# Logs
+*.log
+
+# macOS junk
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows junk
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# IDE/editor files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Vim/Neovim swap/backup files
+*.swp
+*.swo
+*.swn
+*~
+
+# JetBrains cache
+out/
+
+# Temporary files from tests or scripts
+tmp/
+temp/

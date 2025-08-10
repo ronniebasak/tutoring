@@ -2,18 +2,15 @@ const rl = @import("raylib");
 const std = @import("std");
 
 const TOTAL_PIPES = 7;
-const PIPE_SPAWN_X_OFFSET = 350;
-const PIPE_TRIGGER_X_OFFSET = 20;
-const PIPE_GAP_MS = 400;
-const PIPE_SPEED = 500;
-const PIPE_SPAWN_DELAY: f64 = 1.5;
+const PIPE_SPEED = 700;
+const PIPE_SPAWN_DELAY: f64 = 0.8;
 
 pub const Pipe = struct {
-    gap: i32 = 200, // vertical location gap in the pipe
+    gap: i32 = 150, // vertical location gap in the pipe
     gap_size: i32 = 150, // height of gap from top
-    width: i32 = 30, // width of pipe
+    width: i32 = 50, // width of pipe
     xpos: i32 = 2000, // x position of pipe
-    color: rl.Color = .pink,
+    color: rl.Color = .dark_green,
     active: bool = false,
     scored: bool = false,
 
@@ -52,7 +49,7 @@ pub const Pipe = struct {
         //
 
         if (!self.scored) {
-            rl.drawRectangle(self.xpos, 0, self.width, self.gap, rl.Color.dark_brown);
+            rl.drawRectangle(self.xpos, 0, self.width, self.gap, self.color);
             rl.drawRectangle(self.xpos, self.gap + self.gap_size, self.width, 700, self.color);
         } else {
             rl.drawRectangle(self.xpos, 0, self.width, self.gap, rl.Color.red);

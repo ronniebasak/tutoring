@@ -3,11 +3,11 @@ const rl = @import("raylib");
 pub const Ball = struct {
     pos: rl.Vector2 = rl.Vector2.init(100.0, 100.0),
     radius: f32 = 20.0,
-    color: rl.Color = rl.Color.dark_green,
-    flap_boost: f32 = 500.0,
+    color: rl.Color = .dark_blue,
+    flap_boost: f32 = 550.0,
 
     physics: struct {
-        gravity: rl.Vector2 = rl.Vector2.init(0, 1800.0),
+        gravity: rl.Vector2 = rl.Vector2.init(0, 2000.0),
         velocity: rl.Vector2 = rl.Vector2.init(0, 0),
     } = .{},
 

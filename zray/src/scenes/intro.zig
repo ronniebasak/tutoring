@@ -17,7 +17,30 @@ pub const IntroScene = struct {
     pub fn draw(self: *const IntroScene) void {
         _ = self;
         rl.clearBackground(.white);
-        rl.drawText("HELLO", 100, 100, 50, .dark_green);
-        rl.drawText("Press any key to continue", 50, 400, 20, .dark_green);
+
+        const screenWidth = rl.getScreenWidth();
+        const screenHeight = rl.getScreenHeight();
+
+        // Text you want to draw
+        const text1 = "HELLO";
+        const text2 = "Press any key to continue";
+
+        const fontSize1: i32 = 50;
+        const fontSize2: i32 = 20;
+
+        // Measure widths
+        const text1Width = rl.measureText(text1, fontSize1);
+        const text2Width = rl.measureText(text2, fontSize2);
+
+        // Calculate centered positions
+        const text1X = (screenWidth - text1Width) >> 1;
+        const text1Y = (screenHeight >> 1) - fontSize1; // vertical positioning
+
+        const text2X = (screenWidth - text2Width) >> 1;
+        const text2Y = text1Y + fontSize1 + 40; // 40px gap below text1
+
+        // Draw
+        rl.drawText(text1, text1X, text1Y, fontSize1, .dark_green);
+        rl.drawText(text2, text2X, text2Y, fontSize2, .dark_green);
     }
 };

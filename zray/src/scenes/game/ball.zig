@@ -4,10 +4,10 @@ pub const Ball = struct {
     pos: rl.Vector2 = rl.Vector2.init(100.0, 100.0),
     radius: f32 = 20.0,
     color: rl.Color = rl.Color.dark_green,
-    flap_boost: f32 = 300.0,
+    flap_boost: f32 = 400.0,
 
     physics: struct {
-        gravity: rl.Vector2 = rl.Vector2.init(0, 850.0),
+        gravity: rl.Vector2 = rl.Vector2.init(0, 1200.0),
         velocity: rl.Vector2 = rl.Vector2.init(0, 0),
     } = .{},
 

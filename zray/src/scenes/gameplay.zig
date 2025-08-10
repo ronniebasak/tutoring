@@ -7,6 +7,7 @@ const Pipes = @import("game/pipe.zig").Pipes;
 pub const GameplayScene = struct {
     ball: Ball = Ball{ .pos = rl.Vector2.init(250, 300) },
     pipes: Pipes = Pipes{},
+    score: u32 = 0,
 
     pub fn update(self: *GameplayScene, dt: f32) ?scene_types.SceneTag {
         const key = rl.getKeyPressed();
@@ -21,6 +22,7 @@ pub const GameplayScene = struct {
         if (self.ball.pos.x < 0) {
             self.ball.pos.x = 0;
         }
+
         return null;
     }
 

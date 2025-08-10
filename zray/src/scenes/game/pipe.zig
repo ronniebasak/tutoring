@@ -15,7 +15,7 @@ pub const Pipe = struct {
     xpos: i32 = -100, // x position of pipe
     color: rl.Color = .pink,
     active: bool = false,
-    init: bool = false,
+    scored: bool = false,
 
     pub fn spawn(self: *Pipe) void {
         self.xpos = rl.getScreenWidth() + self.width + 5;
@@ -25,8 +25,8 @@ pub const Pipe = struct {
         const rnd = prng.intRangeAtMost(i32, 50, rl.getScreenHeight() - 50 - self.gap_size);
 
         self.gap = rnd;
-        self.init = true;
         self.active = true;
+        self.scored = false;
     }
 
     pub fn update(self: *Pipe, dt: f32) void {
@@ -37,7 +37,6 @@ pub const Pipe = struct {
 
             if (self.xpos < -self.width) {
                 self.active = false;
-                self.init = false;
             }
         }
     }

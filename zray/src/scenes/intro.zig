@@ -2,6 +2,14 @@ const rl = @import("raylib");
 const scene_types = @import("scene_types.zig");
 
 pub const IntroScene = struct {
+    pub fn init(self: *IntroScene) void {
+        _ = self;
+    }
+
+    pub fn deinit(self: *IntroScene) void {
+        _ = self;
+    }
+
     pub fn update(self: *const IntroScene, dt: f32) ?scene_types.SceneTag {
         _ = self;
         _ = dt;

@@ -12,6 +12,16 @@ pub const GameplayScene = struct {
     score: u32 = 0,
     gameover: bool = false,
 
+    pub fn init(self: *GameplayScene) void {
+        self.ball.init() catch |e| std.log.err("BALL LOADING ERROR: {}", .{e});
+        self.pipes.init() catch |e| std.log.err("BALL LOADING ERROR: {}", .{e});
+    }
+
+    pub fn deinit(self: *GameplayScene) void {
+        self.ball.deinit();
+        self.pipes.deinit();
+    }
+
     pub fn update(self: *GameplayScene, dt: f32) ?scene_types.SceneTag {
         const key = rl.getKeyPressed();
         switch (key) {
@@ -71,7 +81,7 @@ pub const GameplayScene = struct {
     }
 
     pub fn draw(self: *GameplayScene) void {
-        rl.clearBackground(.white);
+        rl.clearBackground(.black);
         // if (self.gameover) {
         //     rl.clearBackground(.red);
         // }

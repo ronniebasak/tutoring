@@ -8,6 +8,22 @@ pub const Scene = union(sc.SceneTag) {
     GameScene: GameScene,
     EndScene: EndScene,
 
+    pub fn init(self: *Scene) void {
+        return switch (self.*) {
+            .IntroScene => |*intro| intro.init(),
+            .GameScene => |*game| game.init(),
+            .EndScene => |*end| end.init(),
+        };
+    }
+
+    pub fn deinit(self: *Scene) void {
+        return switch (self.*) {
+            .IntroScene => |*intro| intro.deinit(),
+            .GameScene => |*game| game.deinit(),
+            .EndScene => |*end| end.deinit(),
+        };
+    }
+
     pub fn update(self: *Scene, dt: f32) ?sc.SceneTag {
         return switch (self.*) {
             .IntroScene => |*intro| intro.update(dt),

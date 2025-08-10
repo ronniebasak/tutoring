@@ -19,6 +19,8 @@ pub fn main() anyerror!void {
     rl.setTargetFPS(120); // Set our game to run at 60 frames-per-second
 
     var current_scene = scenes.Scene{ .IntroScene = .{} };
+    current_scene.init();
+    defer current_scene.deinit();
 
     // Main game loop
     while (!rl.windowShouldClose()) { // Detect window close button or ESC key
@@ -27,6 +29,7 @@ pub fn main() anyerror!void {
         const ns = current_scene.update(dt);
 
         if (ns) |unwrapped_ns| {
+            current_scene.deinit();
             switch (unwrapped_ns) {
                 scene_types.SceneTag.GameScene => {
                     current_scene = scenes.Scene{ .GameScene = .{} };
@@ -39,12 +42,13 @@ pub fn main() anyerror!void {
                 },
                 // else => {},
             }
+            current_scene.init();
         }
 
         rl.beginDrawing();
         defer rl.endDrawing();
 
-        rl.clearBackground(.white);
+        rl.clearBackground(.black);
         current_scene.draw();
     }
 }

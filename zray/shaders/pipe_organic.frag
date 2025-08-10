@@ -79,25 +79,26 @@ void main() {
         vec2 pipe_uv = vec2(pos.x * 0.01, pos.y * 0.01);
         float texture_noise = fbm(pipe_uv + time_slow * 0.4);
 
-        // Animated surface patterns
+        // Animated surface patterns (reduced intensity)
         float surface_pattern = sin(pos.y * 0.08 + time_fast) * 0.5 + 0.5;
         float vertical_flow = sin(pos.y * 0.05 + time_fast * 1.8) * 0.3 + 0.7;
         float depth_pattern = fbm(vec2(pos.x * 0.015, pos.y * 0.015 + time_slow * 0.3));
 
         // Base pipe color from fragColor (this comes from your Zig code)
-        vec3 base_color = fragColor.rgb;
+        // Clamp the base color to realistic PBR ranges
+        vec3 base_color = clamp(fragColor.rgb, 0.02, 0.6);
 
-        // Create organic color variations
-        vec3 pipe_highlight = base_color * 1.6; // Brighter
-        vec3 pipe_shadow = base_color * 0.4; // Darker
+        // Create realistic color variations (much more subtle)
+        vec3 pipe_highlight = base_color * 1.15; // Only 15% brighter
+        vec3 pipe_shadow = base_color * 0.7; // 30% darker
         vec3 pipe_mid = base_color * 1.0; // Original
 
-        // Mix colors based on patterns for organic depth
+        // Mix colors based on patterns for organic depth (reduced intensities)
         vec3 pipe_color = mix(pipe_shadow, pipe_mid, texture_noise);
-        pipe_color = mix(pipe_color, pipe_highlight, surface_pattern * 0.4);
-        pipe_color = mix(pipe_color, pipe_mid, vertical_flow * 0.3);
+        pipe_color = mix(pipe_color, pipe_highlight, surface_pattern * 0.2); // Reduced from 0.4
+        pipe_color = mix(pipe_color, pipe_mid, vertical_flow * 0.15); // Reduced from 0.3
 
-        // Add rim lighting effect for that cute glow
+        // Much more subtle rim lighting effect
         float dist_from_left = pos.x - left_edge;
         float dist_from_right = right_edge - pos.x;
         float dist_from_edge = min(dist_from_left, dist_from_right);
@@ -110,23 +111,24 @@ void main() {
         float overall_edge_dist = min(dist_from_edge, dist_from_gap);
         float rim_effect = smoothstep(0.0, 15.0, overall_edge_dist);
 
-        // Apply rim lighting
-        pipe_color = mix(pipe_highlight * 1.2, pipe_color, rim_effect);
+        // Apply much more subtle rim lighting
+        vec3 rim_color = pipe_highlight * 1.05; // Much less intense (was 1.2)
+        pipe_color = mix(rim_color, pipe_color, rim_effect);
 
-        // Add subtle pulsing for life
-        float pulse = sin(time_fast * 2.5) * 0.08 + 0.92;
+        // Add very subtle pulsing
+        float pulse = sin(time_fast * 2.5) * 0.03 + 0.97; // Much more subtle
         pipe_color *= pulse;
 
-        // Add some sparkle near the edges for extra cuteness
+        // Much more subtle sparkle effect
         float sparkle_noise = fbm(pos * 0.1 + time_fast * 1.0);
-        if (sparkle_noise > 0.8 && overall_edge_dist < 10.0) {
-            float sparkle_intensity = (sparkle_noise - 0.8) * 5.0;
-            pipe_color += vec3(0.3, 0.4, 0.2) * sparkle_intensity * (1.0 - rim_effect);
+        if (sparkle_noise > 0.85 && overall_edge_dist < 10.0) { // Higher threshold
+            float sparkle_intensity = (sparkle_noise - 0.85) * 3.0; // Reduced intensity
+            pipe_color += vec3(0.08, 0.12, 0.06) * sparkle_intensity * (1.0 - rim_effect); // Much darker sparkles
         }
 
         finalColor = vec4(pipe_color, 1.0);
     } else if (in_top_border || in_bottom_border) {
-        // Beautiful border shading for top and bottom 20px
+        // More realistic border shading for top and bottom 20px
         float border_progress = in_top_border ?
             (20.0 - pos.y) / 20.0 :
             (20.0 - (u_screen_height - pos.y)) / 20.0;
@@ -140,42 +142,42 @@ void main() {
         float crystal_pattern = fbm(vec2(pos.x * 0.03, time_fast * 0.3)) * 0.7;
         float root_veins = fbm(vec2(pos.x * 0.08 + time_slow, pos.y * 0.1)) * 0.5;
 
-        // Base border colors - earthy/mystical tones
+        // More realistic base border colors - much darker
         vec3 border_base = in_top_border ?
-            vec3(0.2, 0.15, 0.3) : // Deep purple for top (sky/mystical)
-            vec3(0.3, 0.2, 0.1); // Rich brown for bottom (earth/roots)
+            vec3(0.08, 0.06, 0.12) : // Much darker purple for top
+            vec3(0.12, 0.08, 0.04); // Much darker brown for bottom
 
-        vec3 border_highlight = border_base * 2.0;
+        vec3 border_highlight = border_base * 1.5; // Reduced from 2.0
         vec3 border_accent = in_top_border ?
-            vec3(0.5, 0.3, 0.7) : // Magical purple
-            vec3(0.6, 0.4, 0.2); // Golden earth
+            vec3(0.18, 0.12, 0.25) : // Much darker magical purple
+            vec3(0.22, 0.15, 0.08); // Much darker golden earth
 
-        // Mix the patterns
+        // Mix the patterns (reduced intensities)
         vec3 border_color = mix(border_base, border_highlight, border_noise);
-        border_color = mix(border_color, border_accent, flowing_pattern * 0.4);
-        border_color = mix(border_color, border_highlight, crystal_pattern * 0.3);
+        border_color = mix(border_color, border_accent, flowing_pattern * 0.2); // Reduced from 0.4
+        border_color = mix(border_color, border_highlight, crystal_pattern * 0.15); // Reduced from 0.3
 
-        // Add vein-like details
-        if (root_veins > 0.6) {
-            border_color += border_accent * (root_veins - 0.6) * 2.0;
+        // Add vein-like details (much more subtle)
+        if (root_veins > 0.7) { // Higher threshold
+            border_color += border_accent * (root_veins - 0.7) * 1.0; // Reduced intensity
         }
 
         // Fade effect towards the inner edge
         float fade_factor = smoothstep(0.0, 1.0, border_progress);
         border_color *= fade_factor;
 
-        // Add gentle pulsing
-        float border_pulse = sin(time_fast * 1.5) * 0.1 + 0.9;
+        // Add very gentle pulsing
+        float border_pulse = sin(time_fast * 1.5) * 0.05 + 0.95; // Much more subtle
         border_color *= border_pulse;
 
-        // Add some magical sparkles
+        // Much more subtle magical sparkles
         float sparkle = fbm(pos * 0.15 + time_fast * 1.2);
-        if (sparkle > 0.75) {
-            float sparkle_intensity = (sparkle - 0.75) * 4.0;
+        if (sparkle > 0.8) { // Higher threshold
+            float sparkle_intensity = (sparkle - 0.8) * 2.0; // Reduced intensity
             vec3 sparkle_color = in_top_border ?
-                vec3(0.8, 0.6, 1.0) : // Purple sparkles for top
-                vec3(1.0, 0.8, 0.4); // Golden sparkles for bottom
-            border_color += sparkle_color * sparkle_intensity * 0.3;
+                vec3(0.25, 0.20, 0.35) : // Much darker purple sparkles
+                vec3(0.35, 0.28, 0.15); // Much darker golden sparkles
+            border_color += sparkle_color * sparkle_intensity * 0.1; // Much reduced from 0.3
         }
 
         finalColor = vec4(border_color, fade_factor * 0.8);

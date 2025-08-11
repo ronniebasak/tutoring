@@ -38,7 +38,7 @@ pub const Ball = struct {
         // Calculate smoothed velocity as average of recent velocities
         var sum = rl.Vector2.init(0, 0);
         for (self.physics.velocity_history) |vel| {
-            sum = sum.add(vel);
+            sum = sum.add(rl.Vector2.init(100, vel.y));
         }
         self.physics.smoothed_velocity = sum.scale(1.0 / @as(f32, @floatFromInt(self.physics.velocity_history.len)));
     }

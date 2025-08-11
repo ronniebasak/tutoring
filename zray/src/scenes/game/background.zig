@@ -21,6 +21,6 @@ pub const Background = struct {
     pub fn draw(self: *Background) void {
         _ = self;
 
-        rl.clearBackground(rl.Color.dark_green);
+        rl.clearBackground(.black);
     }
 };

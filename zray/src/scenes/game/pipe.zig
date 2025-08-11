@@ -1,7 +1,7 @@
 const rl = @import("raylib");
 const std = @import("std");
 const TOTAL_PIPES = 7;
-const PIPE_SPEED = 700;
+pub const PIPE_SPEED = 700;
 const PIPE_SPAWN_DELAY: f64 = 0.8;
 
 pub const Pipe = struct {

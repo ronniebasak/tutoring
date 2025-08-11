@@ -5,10 +5,12 @@ const scene_types = @import("scene_types.zig");
 const Ball = @import("game/ball.zig").Ball;
 const Pipes = @import("game/pipe.zig").Pipes;
 const Pipe = @import("game/pipe.zig").Pipe;
+const Background = @import("game/background.zig").Background;
 
 pub const GameplayScene = struct {
     ball: Ball = Ball{ .pos = rl.Vector2.init(250, 300) },
     pipes: Pipes = Pipes{},
+    bg: Background = Background{},
     score: u32 = 0,
     gameover: bool = false,
 
@@ -29,6 +31,7 @@ pub const GameplayScene = struct {
             else => {},
         }
 
+        self.bg.update(dt);
         self.pipes.update(dt);
         self.ball.update(dt);
 
@@ -81,11 +84,11 @@ pub const GameplayScene = struct {
     }
 
     pub fn draw(self: *GameplayScene) void {
-        rl.clearBackground(.black);
         // if (self.gameover) {
         //     rl.clearBackground(.red);
         // }
 
+        self.bg.draw();
         self.ball.draw();
         self.pipes.draw();
 

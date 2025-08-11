@@ -16,12 +16,14 @@ pub const GameplayScene = struct {
 
     pub fn init(self: *GameplayScene) void {
         self.ball.init() catch |e| std.log.err("BALL LOADING ERROR: {}", .{e});
-        self.pipes.init() catch |e| std.log.err("BALL LOADING ERROR: {}", .{e});
+        self.pipes.init() catch |e| std.log.err("PIPES LOADING ERROR: {}", .{e});
+        self.bg.init() catch |e| std.log.err("BACKGROUND LOADING ERROR: {}", .{e});
     }
 
     pub fn deinit(self: *GameplayScene) void {
         self.ball.deinit();
         self.pipes.deinit();
+        self.bg.deinit();
     }
 
     pub fn update(self: *GameplayScene, dt: f32) ?scene_types.SceneTag {
@@ -59,26 +61,26 @@ pub const GameplayScene = struct {
             }
         }
 
-        // if (cpipe) |u_pipe| {
-        //     const tx = @as(f32, @floatFromInt(u_pipe.xpos));
-        //     const ty = 0;
-        //     const tw = @as(f32, @floatFromInt(u_pipe.width));
-        //     const th = @as(f32, @floatFromInt(u_pipe.gap));
-        //     const topRec = rl.Rectangle.init(tx, ty, tw, th);
+        if (cpipe) |u_pipe| {
+            const tx = @as(f32, @floatFromInt(u_pipe.xpos));
+            const ty = 0;
+            const tw = @as(f32, @floatFromInt(u_pipe.width));
+            const th = @as(f32, @floatFromInt(u_pipe.gap));
+            const topRec = rl.Rectangle.init(tx, ty, tw, th);
 
-        //     const bx = @as(f32, @floatFromInt(u_pipe.xpos));
-        //     const by = @as(f32, @floatFromInt(u_pipe.gap + u_pipe.gap_size));
-        //     const bw = @as(f32, @floatFromInt(u_pipe.width));
-        //     const bh: f32 = 700;
-        //     const bottomRec = rl.Rectangle.init(bx, by, bw, bh);
+            const bx = @as(f32, @floatFromInt(u_pipe.xpos));
+            const by = @as(f32, @floatFromInt(u_pipe.gap + u_pipe.gap_size));
+            const bw = @as(f32, @floatFromInt(u_pipe.width));
+            const bh: f32 = 700;
+            const bottomRec = rl.Rectangle.init(bx, by, bw, bh);
 
-        //     const tRC = rl.checkCollisionCircleRec(self.ball.pos, self.ball.radius, topRec);
-        //     const bRC = rl.checkCollisionCircleRec(self.ball.pos, self.ball.radius, bottomRec);
+            const tRC = rl.checkCollisionCircleRec(self.ball.pos, self.ball.radius, topRec);
+            const bRC = rl.checkCollisionCircleRec(self.ball.pos, self.ball.radius, bottomRec);
 
-        //     if (tRC or bRC) {
-        //         return scene_types.SceneTag.EndScene;
-        //     }
-        // }
+            if (tRC or bRC) {
+                return scene_types.SceneTag.EndScene;
+            }
+        }
 
         return null;
     }

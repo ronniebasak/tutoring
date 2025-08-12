@@ -8,6 +8,7 @@ pub const Ball = struct {
     color: rl.Color = .dark_blue,
     flap_boost: f32 = 550.0,
     shader: rl.Shader = undefined,
+    texture: rl.Texture = undefined,
     time: f32 = 0.0,
 
     // Trail system
@@ -30,6 +31,9 @@ pub const Ball = struct {
 
     pub fn init(self: *Ball) anyerror!void {
         self.shader = try rl.loadShader("shaders/organic.vert", "shaders/organic.frag");
+        self.texture = try rl.loadTexture(
+            "res/umadbro.png",
+        );
 
         // Initialize trail points to current position
         for (&self.trail.points) |*point| {
@@ -39,6 +43,7 @@ pub const Ball = struct {
 
     pub fn deinit(self: *Ball) void {
         rl.unloadShader(self.shader);
+        rl.unloadTexture(self.texture);
     }
 
     pub fn flap(self: *Ball) void {
@@ -175,11 +180,14 @@ pub const Ball = struct {
 
         // Optional: Draw debug trail points to verify ordering
         // Uncomment for debugging trail order
+        rl.drawTextureEx(self.texture, self.pos.add(rl.Vector2.init(-self.radius, -self.radius)), 0, 0.25, .white);
+        // rl.drawCircleV(self.pos, self.radius, .red);
+
         // for (0..self.trail.points.len) |i| {
         //     const actual_index = (self.trail.current_index + self.trail.points.len - 1 - i) % self.trail.points.len;
         //     const point = self.trail.points[actual_index];
         //     const age = self.trail.ages[actual_index];
-        //
+
         //     if (point.x > -50.0 and age < 1.0) {
         //         const alpha = 1.0 - (age / 1.0);
         //         const size = 8.0 - (@as(f32, @floatFromInt(i)) / @as(f32, @floatFromInt(self.trail.points.len))) * 5.0;

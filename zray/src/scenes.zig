@@ -1,3 +1,4 @@
+const std = @import("std");
 const sc = @import("scenes/scene_types.zig");
 const IntroScene = @import("scenes/intro.zig").IntroScene;
 const GameScene = @import("scenes/gameplay.zig").GameplayScene;
@@ -10,9 +11,9 @@ pub const Scene = union(sc.SceneTag) {
 
     pub fn init(self: *Scene) void {
         return switch (self.*) {
-            .IntroScene => |*intro| intro.init(),
+            .IntroScene => |*intro| intro.init() catch |e| std.debug.print("Intro Failed to Load {}", .{e}),
             .GameScene => |*game| game.init(),
-            .EndScene => |*end| end.init(),
+            .EndScene => |*end| end.init() catch |e| std.debug.print("EndScreen Failed to Load: {}", .{e}),
         };
     }
 

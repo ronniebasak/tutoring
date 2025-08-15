@@ -146,11 +146,9 @@ pub const Ball = struct {
         const shader_velocity = [_]f32{ self.physics.smoothed_velocity.x, -self.physics.smoothed_velocity.y };
         rl.setShaderValue(self.shader, velocity_uniform, &shader_velocity, rl.ShaderUniformDataType.vec2);
 
-        // FIXED: Prepare trail data in correct order (newest to oldest)
         var trail_data: [40]f32 = undefined; // 20 points * 2 components each
         var valid_trail_count: i32 = 0;
 
-        // Start from the most recent point and work backwards
         for (0..self.trail.points.len) |i| {
             // Calculate the actual index in the circular buffer
             // Most recent is at (current_index - 1), then (current_index - 2), etc.
@@ -180,7 +178,7 @@ pub const Ball = struct {
 
         // Optional: Draw debug trail points to verify ordering
         // Uncomment for debugging trail order
-        rl.drawTextureEx(self.texture, self.pos.add(rl.Vector2.init(-self.radius, -self.radius)), 0, 0.25, .white);
+        // rl.drawTextureEx(self.texture, self.pos.add(rl.Vector2.init(-self.radius, -self.radius)), 0, 0.25, .white);
         // rl.drawCircleV(self.pos, self.radius, .red);
 
         // for (0..self.trail.points.len) |i| {

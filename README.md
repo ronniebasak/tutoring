@@ -6,6 +6,12 @@ A Flappy Bird-style game built with Zig and Raylib, featuring custom GLSL shader
 ![Raylib](https://img.shields.io/badge/Raylib-5.6.0-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 
+## 🎬 Gameplay Video
+
+[![Flappy Zig Gameplay](https://img.youtube.com/vi/7fWj8KrL27k/maxresdefault.jpg)](https://www.youtube.com/watch?v=7fWj8KrL27k)
+
+*Click the image above to watch the gameplay video*
+
 ## 🎮 Features
 
 - **Custom Physics Engine**: Smooth gravity and flapping mechanics with velocity smoothing

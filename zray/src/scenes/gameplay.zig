@@ -1,3 +1,14 @@
+//! Gameplay Scene - Main Game Logic
+//!
+//! This scene contains the core gameplay mechanics including:
+//! - Player ball with physics and visual effects
+//! - Procedurally generated pipe obstacles
+//! - Collision detection (circle vs rectangle)
+//! - Score tracking
+//! - Game over detection
+//!
+//! The scene transitions to EndScene on collision.
+
 const std = @import("std");
 const rl = @import("raylib");
 const scene_types = @import("scene_types.zig");
@@ -7,11 +18,21 @@ const Pipes = @import("game/pipe.zig").Pipes;
 const Pipe = @import("game/pipe.zig").Pipe;
 const Background = @import("game/background.zig").Background;
 
+/// Main gameplay scene containing all game entities and logic
 pub const GameplayScene = struct {
+    /// Player character with physics and shader effects
     ball: Ball = Ball{ .pos = rl.Vector2.init(250, 300) },
+    
+    /// Obstacle system with object pooling
     pipes: Pipes = Pipes{},
+    
+    /// Scrolling background with shader effects
     bg: Background = Background{},
+    
+    /// Current player score (increments when passing pipes)
     score: u32 = 0,
+    
+    /// Game over flag (not currently used but available for extensions)
     gameover: bool = false,
 
     pub fn init(self: *GameplayScene) void {
